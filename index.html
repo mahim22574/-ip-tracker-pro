@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b18">
+<title>IP Tracker Pro Dashboard</title>
+
+<style>
+:root {
+  --bg:#050b18;
+  --panel:#0b1830;
+  --panel2:#102344;
+  --line:#174477;
+  --blue:#087cff;
+  --cyan:#00e5ff;
+  --purple:#863bff;
+  --green:#00e6a0;
+  --text:#edf5ff;
+  --muted:#91a8c9;
+}
+
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:radial-gradient(ellipse at 60% 0%,#102654,transparent 50%),var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+button,input {font:inherit}
+button {cursor:pointer}
+button:focus-visible,input:focus-visible {
+  outline:2px solid var(--cyan);
+  outline-offset:2px;
+}
+header {
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:#061023f5;
+  border-bottom:1px solid var(--line);
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.brand {font-size:22px;font-weight:900}
+.brand span {color:var(--cyan)}
+.sub {font-size:11px;color:var(--muted);margin-top:4px}
+.layout {display:flex;min-height:calc(100vh - 65px)}
+aside {
+  width:205px;
+  flex-shrink:0;
+  padding:18px 12px;
+  background:#061126;
+  border-right:1px solid var(--line);
+}
+.nav {
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:13px 12px;
+  margin-bottom:7px;
+  border:1px solid transparent;
+  border-radius:9px;
+  color:#b9d5ff;
+  background:transparent;
+}
+.nav:hover,.nav.active {
+  color:white;
+  background:linear-gradient(100deg,#1544a7,#4720a1);
+  border-color:#416cff;
+}
+main {flex:1;min-width:0;padding:22px}
+.hero {
+  padding:25px;
+  border:1px solid #1265a9;
+  border-radius:16px;
+  background:radial-gradient(circle at 95% 0%,#6427ad66,transparent 40%),linear-gradient(120deg,#0d2c57,#0b1630);
+}
+.eyebrow {color:var(--cyan);font-size:12px;letter-spacing:2px}
+h1 {font-size:clamp(24px,4vw,39px);margin:12px 0}
+p {line-height:1.5}
+.muted {color:var(--muted);font-size:13px}
+.ipline {display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+#myIP {font-size:clamp(24px,4vw,37px);font-weight:900;overflow-wrap:anywhere}
+.badge {color:var(--green);background:#00e6a01a;border:1px solid #00e6a044;padding:6px 10px;border-radius:20px;font-size:12px}
+.btn {
+  border:0;border-radius:9px;padding:11px 15px;
+  color:white;background:linear-gradient(110deg,var(--blue),var(--purple));
+  font-weight:bold;
+}
+.secondary {background:#142746;border:1px solid var(--line)}
+.btn:disabled {opacity:.6}
+.searchgrid {display:grid;grid-template-columns:1.5fr 1fr;gap:15px;margin-top:17px}
+.card,.panel {
+  min-width:0;background:linear-gradient(145deg,#0d1d39,#091429);
+  border:1px solid var(--line);border-radius:13px;padding:18px;
+}
+h2 {font-size:17px;margin:0 0 8px}
+.searchbox {display:flex;gap:8px;margin-top:15px}
+input {
+  width:100%;min-width:0;background:#050e20;border:1px solid #244875;
+  border-radius:9px;padding:13px;color:white;
+}
+.quick {display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.quick button {
+  background:#10284a;color:#c9e6ff;border:1px solid #24568a;
+  border-radius:30px;padding:8px 12px;font-size:12px;
+}
+.features {
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;margin:17px 0;
+}
+.feature {
+  padding:15px 10px;text-align:center;border:1px solid var(--line);
+  border-radius:12px;background:#0b1b36;color:#d7e8ff;font-size:12px;
+}
+.feature b {display:block;color:var(--cyan);margin-bottom:7px;font-size:15px}
+.infogrid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.panel {padding:0;overflow:hidden}
+.panel h3 {margin:0;padding:15px;font-size:14px;background:#10284b;border-bottom:1px solid var(--line)}
+.rows {padding:8px 13px}
+.row {display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #ffffff0d;font-size:12px}
+.row:last-child {border:0}
+.label {color:var(--muted);flex-shrink:0}
+.value {text-align:right;overflow-wrap:anywhere}
+.accent {color:var(--cyan)}
+.green {color:var(--green)}
+.bottomgrid {display:grid;grid-template-columns:1.6fr 1fr;gap:13px;margin-top:16px}
+.tablewrap {overflow-x:auto}
+table {width:100%;border-collapse:collapse;min-width:360px;font-size:12px}
+td,th {padding:12px 8px;text-align:left;border-bottom:1px solid #ffffff10}
+th {color:var(--cyan);background:#10284b}
+.smallbtn {background:#10284b;color:white;border:1px solid var(--line);padding:6px 8px;border-radius:6px}
+.notice {color:var(--muted);font-size:11px;line-height:1.7;margin-top:12px}
+#message {color:#ffaaaa;font-size:12px;margin-top:10px}
+.page {display:none}
+.page.active {display:block}
+.statgrid {display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.stat {padding:15px;border:1px solid var(--line);border-radius:10px;background:#0e2242}
+.stat strong {display:block;font-size:22px;color:var(--cyan);margin-top:8px}
+footer {padding:20px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+@media(max-width:1000px) {
+  .infogrid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .features {grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px) {
+  header {padding:13px}
+  .layout {display:block}
+  aside {width:100%;display:flex;overflow-x:auto;padding:8px;gap:5px;border-right:0}
+  .nav {width:auto;white-space:nowrap;margin:0;padding:10px}
+  main {padding:12px}
+  .hero,.card {padding:16px}
+  .searchgrid,.bottomgrid {grid-template-columns:1fr}
+  .infogrid {grid-template-columns:1fr}
+  .features {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .searchbox {flex-direction:column}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div class="brand">◈ IP <span>TRACKER PRO</span></div>
+    <div class="sub">IP Intelligence Dashboard</div>
+  </div>
+  <button class="btn secondary" id="refresh">↻ Refresh</button>
+</header>
+
+<div class="layout">
+<aside>
+  <button class="nav active" data-page="dashboard">⌂ Dashboard</button>
+  <button class="nav" data-page="lookup">⌕ IP Lookup</button>
+  <button class="nav" data-page="myip">◈ My IP</button>
+  <button class="nav" data-page="history">◷ History</button>
+  <button class="nav" data-page="saved">☆ Saved IPs</button>
+  <button class="nav" data-page="tools">⚙ Network Tools</button>
+  <button class="nav" data-page="settings">☷ Settings</button>
+</aside>
+
+<main>
+
+<section class="page active" id="dashboard">
+  <section class="hero">
+    <div class="eyebrow">YOUR PUBLIC IP ADDRESS</div>
+    <h1 id="myIP">Loading...</h1>
+    <div class="ipline">
+      <span class="badge" id="version">Checking...</span>
+      <span class="muted" id="status">Connecting to IP service...</span>
+    </div>
+    <p class="muted">Your public network information at a glance.</p>
+    <button class="btn" id="copyIP">▣ Copy IP</button>
+  </section>
+
+  <div class="searchgrid">
+    <section class="card">
+      <h2>⌕ IP Lookup</h2>
+      <p class="muted">Search a public IP address.</p>
+      <form class="searchbox" id="lookupForm">
+        <input id="ipInput" placeholder="e.g. 8.8.8.8" required>
+        <button class="btn" id="searchBtn">Search →</button>
+      </form>
+      <div id="message" role="status"></div>
+    </section>
+
+    <section class="card">
+      <h2>⚡ Quick Search</h2>
+      <p class="muted">Try a public DNS address.</p>
+      <div class="quick">
+        <button data-ip="8.8.8.8">8.8.8.8</button>
+        <button data-ip="1.1.1.1">1.1.1.1</button>
+        <button data-ip="9.9.9.9">9.9.9.9</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="features">
+    <div class="feature"><b>◈</b>IP Lookup</div>
+    <div class="feature"><b>⌖</b>Geolocation</div>
+    <div class="feature"><b>◎</b>ISP Details</div>
+    <div class="feature"><b>⌘</b>Network Info</div>
+    <div class="feature"><b>◷</b>Search History</div>
+  </div>
+
+  <div class="infogrid">
+    <section class="panel">
+      <h3>◈ IP Information</h3>
+      <div class="rows" id="ipInfo"></div>
+    </section>
+    <section class="panel">
+      <h3>⌖ Geolocation</h3>
+      <div class="rows" id="geoInfo"></div>
+    </section>
+    <section class="panel">
+      <h3>◎ Network Details</h3>
+      <div class="rows" id="networkInfo"></div>
+    </section>
+    <section class="panel">
+      <h3>⬡ IP Type</h3>
+      <div class="rows" id="securityInfo"></div>
+    </section>
+  </div>
+
+  <div class="bottomgrid">
+    <section class="card">
+      <h2>◷ Recent Searches</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>IP Address</th><th>Country</th><th>Action</th></tr></thead>
+          <tbody id="recent"></tbody>
+        </table>
+      </div>
+      <p><button class="btn secondary" id="clearHistory">Clear History</button></p>
+    </section>
+    <section class="card">
+      <h2>▦ Statistics</h2>
+      <div class="statgrid">
+        <div class="stat">Total Lookups<strong id="total">0</strong></div>
+        <div class="stat">Saved IPs<strong id="savedCount">0</strong></div>
+      </div>
+      <p class="notice">Statistics reflect activity stored in this browser only.</p>
+    </section>
+  </div>
+</section>
+
+<section class="page" id="lookup">
+  <div class="card">
+    <h2>IP Lookup</h2>
+    <p class="muted">Enter a public IPv4 or IPv6 address.</p>
+    <form class="searchbox" id="lookupForm2">
+      <input id="ipInput2" placeholder="Enter IP address" required>
+      <button class="btn">Lookup IP</button>
+    </form>
+    <p class="notice">Results appear in the Dashboard.</p>
+  </div>
+</section>
+
+<section class="page" id="myip">
+  <div class="card">
+    <h2>My Public IP</h2>
+    <p id="myIP2">Loading...</p>
+    <button class="btn" id="refresh2">Refresh IP</button>
+    <p class="notice">A VPN or proxy may change the public IP shown.</p>
+  </div>
+</section>
+
+<section class="page" id="history">
+  <div class="card">
+    <h2>Search History</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>IP Address</th><th>Country</th><th>Action</th></tr></thead>
+        <tbody id="historyTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="saved">
+  <div class="card">
+    <h2>Saved IP Addresses</h2>
+    <p class="muted">Save an address after looking it up.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>IP Address</th><th>Country</th><th>Action</th></tr></thead>
+        <tbody id="savedTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="tools">
+  <div class="card">
+    <h2>Network Tools</h2>
+    <p>Public IP check, IPv4/IPv6 identification and IP geolocation lookup are supported.</p>
+    <p class="notice">This browser prototype does not perform ping, traceroute, port scans or live network monitoring.</p>
+  </div>
+</section>
+
+<section class="page" id="settings">
+  <div class="card">
+    <h2>Settings</h2>
+    <p>History and saved IPs are stored locally in this browser.</p>
+    <button class="btn secondary" id="clearAll">Clear All Local Data</button>
+    <p class="notice">This page has no authenticated administrator account yet. Frontend controls are not a security boundary.</p>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer>IP Tracker Pro · Modern Network Dashboard</footer>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+let myPublicIP = "";
+
+function readStore(key) {
+  try { return JSON.parse(localStorage.getItem(key) || "[]"); }
+  catch { return []; }
+}
+
+function writeStore(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch {}
+}
+
+function showPage(name) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  $(name).classList.add("active");
+  document.querySelectorAll(".nav").forEach(b =>
+    b.classList.toggle("active", b.dataset.page === name)
+  );
+}
+
+document.querySelectorAll(".nav").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+function renderRows(id, entries) {
+  const container = $(id);
+  container.replaceChildren();
+
+  entries.forEach(([label, value]) => {
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const left = document.createElement("span");
+    left.className = "label";
+    left.textContent = label;
+
+    const right = document.createElement("span");
+    right.className = "value accent";
+    right.textContent = value || "Unavailable";
+
+    row.append(left, right);
+    container.append(row);
+  });
+}
+
+function version(ip) {
+  return ip.includes(":") ? "IPv6" :
+    /^\d{1,3}(\.\d{1,3}){3}$/.test(ip) ? "IPv4" : "Unknown";
+}
+
+async function getJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("IP service request failed.");
+  return response.json();
+}
+
+async function checkMyIP() {
+  $("status").textContent = "Connecting...";
+  try {
+    const data = await getJSON("https://api.ipify.org?format=json");
+    myPublicIP = data.ip;
+    $("myIP").textContent = data.ip;
+    $("myIP2").textContent = data.ip;
+    $("version").textContent = version(data.ip);
+    $("status").textContent = "Public IP detected";
+    await lookup(data.ip, false);
+  } catch {
+    $("myIP").textContent = "Unavailable";
+    $("myIP2").textContent = "Unavailable";
+    $("status").textContent = "Check your internet connection";
+  }
+}
+
+async function lookup(ip, save = true) {
+  $("message").textContent = "";
+  $("searchBtn").disabled = true;
+
+  try {
+    const data = await getJSON(
+      "https://ipwho.is/" + encodeURIComponent(ip)
+    );
+
+    if (data.success === false) {
+      throw new Error(data.message || "IP lookup failed.");
+    }
+
+    renderRows("ipInfo", [
+      ["IP Address", data.ip],
+      ["Version", data.type || version(data.ip)],
+      ["Hostname", data.ip]
+    ]);
+
+    renderRows("geoInfo", [
+      ["Country", data.country],
+      ["Region", data.region],
+      ["City", data.city],
+      ["Latitude", data.latitude],
+      ["Longitude", data.longitude],
+      ["Timezone", data.timezone?.id]
+    ]);
+
+    renderRows("networkInfo", [
+      ["ISP", data.connection?.isp],
+      ["Organization", data.connection?.org],
+      ["ASN", data.connection?.asn],
+      ["Domain", data.connection?.domain]
+    ]);
+
+    renderRows("securityInfo", [
+      ["IP Type", data.type || version(data.ip)],
+      ["Public IP", "Lookup result"],
+      ["Location", "Approximate"],
+      ["Proxy/VPN", "Not verified"]
+    ]);
+
+    if (save) {
+      const history = readStore("ipHistory").filter(x => x.ip !== data.ip);
+      history.unshift({
+        ip: data.ip,
+        country: data.country || "Unknown"
+      });
+      writeStore("ipHistory", history.slice(0, 20));
+      renderHistory();
+    }
+  } catch (error) {
+    $("message").textContent = error.message || "Could not retrieve IP data.";
+  } finally {
+    $("searchBtn").disabled = false;
+  }
+}
+
+function renderTable(id, key, allowSave) {
+  const body = $(id);
+  body.replaceChildren();
+
+  const items = readStore(key);
+
+  if (!items.length) {
+    const row = body.insertRow();
+    const cell = row.insertCell();
+    cell.colSpan = 3;
+    cell.textContent = "No records yet.";
+    return;
+  }
+
+  items.forEach(item => {
+    const row = body.insertRow();
+    [item.ip, item.country].forEach(value => {
+      const cell = row.insertCell();
+      cell.textContent = value || "Unknown";
+    });
+
+    const action = row.insertCell();
+    const button = document.createElement("button");
+    button.className = "smallbtn";
+    button.textContent = allowSave ? "Save" : "Remove";
+
+    button.addEventListener("click", () => {
+      if (allowSave) {
+        const saved = readStore("savedIPs").filter(x => x.ip !== item.ip);
+        saved.unshift(item);
+        writeStore("savedIPs", saved.slice(0, 50));
+      } else {
+        writeStore(key, items.filter(x => x.ip !== item.ip));
+      }
+      renderHistory();
+    });
+
+    action.append(button);
+  });
+}
+
+function renderHistory() {
+  renderTable("recent", "ipHistory", true);
+  renderTable("historyTable", "ipHistory", true);
+  renderTable("savedTable", "savedIPs", false);
+  $("total").textContent = readStore("ipHistory").length;
+  $("savedCount").textContent = readStore("savedIPs").length;
+}
+
+function submitLookup(ip) {
+  if (!ip.trim()) return;
+  showPage("dashboard");
+  $("ipInput").value = ip.trim();
+  lookup(ip.trim());
+}
+
+$("lookupForm").addEventListener("submit", e => {
+  e.preventDefault();
+  submitLookup($("ipInput").value);
+});
+
+$("lookupForm2").addEventListener("submit", e => {
+  e.preventDefault();
+  submitLookup($("ipInput2").value);
+});
+
+document.querySelectorAll("[data-ip]").forEach(button => {
+  button.addEventListener("click", () => submitLookup(button.dataset.ip));
+});
+
+$("refresh").addEventListener("click", checkMyIP);
+$("refresh2").addEventListener("click", checkMyIP);
+
+$("copyIP").addEventListener("click", async () => {
+  if (!myPublicIP) return;
+  try {
+    await navigator.clipboard.writeText(myPublicIP);
+    $("copyIP").textContent = "Copied!";
+    setTimeout(() => $("copyIP").textContent = "▣ Copy IP", 1500);
+  } catch {
+    $("status").textContent = "Copy unavailable in this preview.";
+  }
+});
+
+$("clearHistory").addEventListener("click", () => {
+  writeStore("ipHistory", []);
+  renderHistory();
+});
+
+$("clearAll").addEventListener("click", () => {
+  if (!confirm("Delete all locally stored IP history and saved IPs?")) return;
+  writeStore("ipHistory", []);
+  writeStore("savedIPs", []);
+  renderHistory();
+});
+
+renderHistory();
+checkMyIP();
+</script>
+
+</body>
+  </html>
